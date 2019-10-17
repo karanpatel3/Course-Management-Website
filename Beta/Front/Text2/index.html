@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="myForm">
+  <form name="loginForm">
+    <input type="text" name="username" id="username" placeholder="UCID" class="input">      <br />
+    <input type="password" name="password" id="password" placeholder="Password" class="input"><br />
+    <button type="button" id="btn" name="button">Login</button><!-- name attribute is used on server side to grab the value of the input field -->
+      <p id="error"></p>
+    </form>
+   </div>
+</body>
+<script type="text/javascript">
+  var btn = document.getElementById("btn");
+  btn.addEventListener("click", loginFunc);
+
+  function loginFunc(){
+    console.log("Button Pressed");
+    var ucid = document.loginForm.username.value;
+  var pw = document.loginForm.password.value;
+    var xhttp = new XMLHttpRequest();
+    var payload = JSON.stringify({"username":ucid, "password":pw});
+
+    xhttp.open("POST", "http://afsaccess1.njit.edu/~ntb6/FrontPHP.php", true);
+    xhttp.send(payload);
+    console.log(payload);
+    xhttp.onreadystatechange = function(){
+      if(xhttp.readyState == 4 && xhttp.status == 200){
+        var error = "Invalid UCID or Password"
+        var response = this.responseText;
+      //  console.log(response);
+        var parsed = JSON.parse(response);
+      //  console.log(parsed);
+        if(parsed.type == "s"){
+          window.location.href = "http://afsaccess1.njit.edu/~ntb6/WelcomeStud.php";
+        }
+        else if(parsed.type == "i"){
+          window.location.href = "http://afsaccess1.njit.edu/~ntb6/WelcomeInst.php";
+        }
+        else if(parsed == null || response.length == 0){
+          document.getElementById("error").innerHTML = "Backend sending null";
+        }
+        else{
+          document.getElementById("error").innerHTML = error;
+        }
+      };
+    }
+  }
+</script>
+</html>
