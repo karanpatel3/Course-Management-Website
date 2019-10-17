@@ -4,8 +4,8 @@
   $userName = $_POST["ucid"];
   $password = $_POST["pass"];
   $result = array("ucid" => $userName,"pass" => $password);
-  echo $userName;
-  echo $result;
+  // echo $userName;
+  // echo $result;
 // echo $result;
   $ch = curl_init("http://afsaccess1.njit.edu/~kp486/BetaLogin2.php");
   curl_setopt($ch, CURLOPT_POST, true);
@@ -16,7 +16,7 @@
   $Val = curl_exec($ch);
   // echo $Val;
   curl_close($ch);
-  // echo $Val;
+  echo $Val;
 }
 //echo "ucid = " . $userName . '   ';
 //echo "pass = " . $password ;
