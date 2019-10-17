@@ -16,18 +16,25 @@ sum = num1 + num2
 print("Sum of {0} and {1} is {2}".format(num1, num2, sum))';
 
 $testCase1 = '+';
-$testCase2 = 'Hello World';
+$testCase2 = 'Sum of 15 and 12 is 27';
 $totalPoints = 10;
 
 if(strpos($answer,$testCase1)==false){
     $totalPoints -= 5;
+    echo "epic fail";
 }
 
-$file = fopen("/afs/cad.njit.edu/u/a/j/ajr74/public_html/PyDir/pythonExec.py", "w") or die("Unable to open file.");
+$file = fopen("/afs/cad.njit.edu/u/a/j/ajr74/public_html/pythonExec.py", "w") or die("Unable to open file.");
 
-$execResult = exec('python /afs/cad.njit.edu/u/a/j/ajr74/public_html/PyDir/pythonExec.py');
+fwrite($file, $answer);
 
-echo $execResult;
+$execResult = exec('python /afs/cad.njit.edu/u/a/j/ajr74/public_html/pythonExec.py');
+
+fclose($file);
+
+if($execResult!=$testCase2){
+    echo "wrong answer";
+}
 
 //string searching
 //php exec
