@@ -48,10 +48,10 @@
         var parsed = JSON.parse(response);
         console.log(parsed);
         if(parsed.type == "s"){
-          window.location.href = "https://web.njit.edu/~cfl4/slandingpg.php";
+          window.location.href = "http://afsconnect1.njit.edu/~ntb6/WelcomeStud.php";
         }
         else if(parsed.type == "i"){
-          window.location.href = "https://web.njit.edu/~cfl4/tlandingpg.php";
+          window.location.href = "http://afsconnect1.njit.edu/~ntb6/WelcomeInst.php";
         }
         else if(parsed == null || response.length == 0){
           document.getElementById("error").innerHTML = "Backend sending null";
