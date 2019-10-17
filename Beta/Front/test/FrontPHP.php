@@ -14,9 +14,9 @@
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
   $Val = curl_exec($ch);
-  // echo $Val;
-  curl_close($ch);
   echo $Val;
+  curl_close($ch);
+  // echo $Val;
 }
 //echo "ucid = " . $userName . '   ';
 //echo "pass = " . $password ;
