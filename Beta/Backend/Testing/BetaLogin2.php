@@ -1,26 +1,28 @@
 <?php
 
-$servername = "mysql01.arcs.njit.edu";
-$dbusername = "kp486";
-$dbpassword = "7UOK2hjq";
-$db = "kp486";
-// Create connection
-$conn = mysqli_connect($servername, $dbusername, $dbpassword, $db);
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+include('connectSQL.php');
 
 $login = file_get_contents('php://input');
 
+//echo $login;
+
+//echo file_get_contents('php://input');
+
+
 $json_decode = json_decode($login, true);
 
+//echo var_dump($login);
+//echo var_dump($json_decode);
 
-$username = $json_decode['ucid'];
-$password = $json_decode['pw'];
+$user = $json_decode['username'];
 
+$pass = $json_decode['password'];
 
-$sql = "SELECT `role` FROM `login` WHERE `username` = '$username' AND `password` = '$password'";
+//echo var_dump($user);
+//echo $user;
+//echo var_dump($pass);
+
+$sql = "SELECT `type` FROM `beta_login` WHERE `username`='$user' AND `password`='$pass'";
 
 
 $data = mysqli_query($conn, $sql);
@@ -29,7 +31,7 @@ $result = mysqli_fetch_assoc($data);
 
 
 if(!$data) {
- echo json_encode($result);
+
  echo json_encode(array("response"=>"error"));
 
 }
