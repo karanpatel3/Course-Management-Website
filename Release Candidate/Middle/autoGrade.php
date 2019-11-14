@@ -1,13 +1,13 @@
 <?php
 
-//http://afsaccess1.njit.edu/~ajr74/autoGrade.php
-
 $answer = "def sum(numbers):
     total = 0
     for x in numbers:
         total += x
     return total
 print(sum((8, 2, 3, 0, 7)))";
+
+$points = 10;
 
 $functionName = "sum";
 $constraint = "while";
@@ -19,14 +19,13 @@ function checkColon($ans){
     rewind($answerFile);
     $line = fgets($answerFile);
 
-    if (strstr($line, ':')) {
-        $output = ": found";
-    } else {
-        $output = "no : found";
-    }
-
     fclose($answerFile);
-    return $output;
+
+    if (strstr($line, ':')) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function checkFuncName($funcName, $ans){
@@ -43,7 +42,12 @@ function checkFuncName($funcName, $ans){
 
     fclose($answerFile);
     fclose($funcFile);
-    return $execResult;
+
+    if($execResult = "Correct function name"){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function checkConstraint($cons, $ans){
@@ -51,13 +55,36 @@ function checkConstraint($cons, $ans){
     $constraint = $cons;
 
     if (strstr($answer, $constraint)) {
-        $output = $constraint . " found";
+        return true;
     } else {
-        $output = "no " . $constraint . " loop found";
+        return false;
     }
-
-    return $output;
 }
+
+function output($inPoints, $funcName, $cons, $ans){
+    $points = $inPoints;
+    $answer = $ans;
+    $functionName = $funcName;
+    $constraint = $cons;
+    $wrongCounter = 0;
+
+    if(checkColon($answer)){
+        $minus = ceil($points*0.10);
+        $colonMsg = "No : in header, minus " . $minus . " points";
+        wrongCounter++;
+    }
+    if(checkConstraint($constraint, $answer)){
+        $minus = ceil($points*0.10);
+        $constraintMsg = "No" . $constraint . " loop used in answer, minus " . $minus . " points";
+        wrongCounter++;
+    }
+    if(checkFuncName($functionName, $answer)){
+        $minus = ceil($points*0.10);
+        $funcNameMsg = "Incorrect function name, minus " . $minus . " points";
+        wrongCounter++;
+    }
+}
+
 
 $output = checkColon($answer);
 $output2 = checkFuncName($functionName, $answer);
