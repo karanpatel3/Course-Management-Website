@@ -1,5 +1,5 @@
 <?php
-$answer = "def operation(op, a, b):
+$answer = "def operation(op, a, b)
 	if op == '+':
 		return a+b
 	elif op == '-':
@@ -10,15 +10,10 @@ $answer = "def operation(op, a, b):
 		return a/b
 	else:
 		return \"error\"";
-$points = 10;
-$functionName = "operation";
-$constraint = "";
-$testcase1 = "\"-\",5,3/2";
-$testcase2 = "0";
-$testcase3 = "0";
-$testcase4 = "0";
-$testcase5 = "0";
-$testcase6 = "0";
+$points = 20;
+$functionName = "xd";
+$constraint = "for";
+$testcases = array("\"-\",5,3.1", "\"+\",5,3.7", "\"*\",5,3.14", "\"/\",4,2.1", "\"/\",4,2.1", "\"/\",4,2.1");
 
 function checkColon($ans){
     $answer = $ans;
@@ -77,8 +72,7 @@ function checkTestcase($test, $ans){
     $funcName = shell_exec('python /afs/cad.njit.edu/u/a/j/ajr74/public_html/funcName.py');
 
     $funcName = trim($funcName);
-
-    $split = explode("/", $testcase);
+    $split = explode(".", $testcase);
 
     $input = explode(",", $split[0]);
     $output = $split[1];
@@ -115,28 +109,59 @@ function checkTestcase($test, $ans){
     }
 }
 
-function output($inPoints, $funcName, $cons, $ans, $ind){
+function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
     $points = $inPoints;
     $answer = $ans;
+    $testcases = $test;
+    $testOut = [];
     $functionName = $funcName;
     $constraint = $cons;
     $wrongCounter = 0;
     $indicator = $ind;
+
     if(!checkColon($answer)){
-        $minus = ceil($points*0.10);
+        $minus = floor($points*0.10);
+        if($minus == 0){
+            $minus = 1;
+        }
         $colonMsg = "No : in header, minus " . $minus . " points";
         $wrongCounter++;
     }
     if(!checkFuncName($functionName, $answer)){
-        $minus = ceil($points*0.10);
+        $minus = floor($points*0.10);
+        if($minus == 0){
+            $minus = 1;
+        }
         $funcNameMsg = "Incorrect function name, minus " . $minus . " points";
         $wrongCounter++;
     }
-    if(!checkConstraint($constraint, $answer)){
-        $minus = ceil($points*0.10);
-        $constraintMsg = "No " . $constraint . " statement used in answer, minus " . $minus . " points";
-        $wrongCounter++;
+    if(!empty($constraint)){
+        if(!checkConstraint($constraint, $answer)){
+            $minus = floor($points*0.10);
+            if($minus == 0){
+                $minus = 1;
+            }
+            $constraintMsg = "No " . $constraint . " statement used in answer, minus " . $minus . " points";
+            $wrongCounter++;
+        }
     }
+    for($x = 0; $x < sizeof($testcases); $x++){
+        if(!checkTestcase($testcases[$x], $answer)){
+            if(empty($constraint)){
+                $minus = floor($points*(0.80/sizeof($testcases)));
+                if($minus == 0){
+                    $minus = 1;
+                }
+            }else{
+                $minus = floor($points*(0.70/sizeof($testcases)));
+                if($minus == 0){
+                    $minus = 1;
+                }
+            }
+            array_push($testOut, "Testcase #" . ($x+1) . " failed minus " . $minus . " points");
+        }
+    }
+
     if($wrongCounter == 0){
         return "Nothing Wrong";
     }else{
@@ -146,16 +171,47 @@ function output($inPoints, $funcName, $cons, $ans, $ind){
             return $funcNameMsg;
         }elseif ($indicator == 3){
             return $constraintMsg;
+        }elseif ($indicator == 4){
+            return $testOut;
         }else{
             return "No indicator";
         }
     }
 }
 
+function outputForm(){
+
+}
+
 $out = checkFuncName($functionName, $answer);
-$out2 = checkTestcase($testcase1, $answer);
+$out2 = checkTestcase($testcases[0], $answer);
+$out3 = checkColon($answer);
+$out4 = checkConstraint($answer, $constraint);
+print($out2 . " Testcase");
 print("<br>");
-print($out2 . "Testcase");
+print($out . " Function Name");
 print("<br>");
+print($out3 . " Colon");
+print("<br>");
+print($out4 . " Constraint");
+print("<br>");
+print(outputGen($points, $functionName, $constraint, $answer, $testcases,1));
+print("<br>");
+print(outputGen($points, $functionName, $constraint, $answer, $testcases,2));
+print("<br>");
+print(outputGen($points, $functionName, $constraint, $answer, $testcases,3));
+print("<br>");
+$output2 = outputGen($points, $functionName, $constraint, $answer, $testcases, 4);
+print($output2[0]);
+print("<br>");
+print($output2[1]);
+print("<br>");
+print($output2[2]);
+print("<br>");
+print($output2[3]);
+print("<br>");
+print($output2[4]);
+print("<br>");
+print($output2[5]);
 print("<br>");
 ?>
