@@ -1,5 +1,8 @@
 <?php
-$answer = "def operation(op, a, b)
+
+//Dummy inputs below, inputs needed from Database - student answer, points, function name, constraint, testcases array
+
+$answer = "def operation(op, a, b):
 	if op == '+':
 		return a+b
 	elif op == '-':
@@ -10,10 +13,20 @@ $answer = "def operation(op, a, b)
 		return a/b
 	else:
 		return \"error\"";
+
 $points = 20;
-$functionName = "xd";
-$constraint = "for";
-$testcases = array("\"-\",5,3.1", "\"+\",5,3.7", "\"*\",5,3.14", "\"/\",4,2.1", "\"/\",4,2.1", "\"/\",4,2.1");
+
+$functionName = "operation";
+
+$constraint = "";
+
+$testcases = array("\"-\",5,3.2", "\"+\",5,3.8", "\"*\",5,3.15", "\"/\",4,2.2", "\"/\",4,2.2", "\"/\",4,2.2");
+
+function testCaseNum($test){
+    $testcases = $test;
+
+    return sizeof($testcases);
+}
 
 function checkColon($ans){
     $answer = $ans;
@@ -116,7 +129,6 @@ function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
     $testOut = [];
     $functionName = $funcName;
     $constraint = $cons;
-    $wrongCounter = 0;
     $indicator = $ind;
 
     if(!checkColon($answer)){
@@ -125,7 +137,6 @@ function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
             $minus = 1;
         }
         $colonMsg = "No : in header, minus " . $minus . " points";
-        $wrongCounter++;
     }
     if(!checkFuncName($functionName, $answer)){
         $minus = floor($points*0.10);
@@ -133,7 +144,6 @@ function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
             $minus = 1;
         }
         $funcNameMsg = "Incorrect function name, minus " . $minus . " points";
-        $wrongCounter++;
     }
     if(!empty($constraint)){
         if(!checkConstraint($constraint, $answer)){
@@ -142,7 +152,6 @@ function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
                 $minus = 1;
             }
             $constraintMsg = "No " . $constraint . " statement used in answer, minus " . $minus . " points";
-            $wrongCounter++;
         }
     }
     for($x = 0; $x < sizeof($testcases); $x++){
@@ -162,56 +171,69 @@ function outputGen($inPoints, $funcName, $cons, $ans, $test, $ind){
         }
     }
 
-    if($wrongCounter == 0){
-        return "Nothing Wrong";
+    if($indicator == 1){
+        return $colonMsg;
+    }elseif ($indicator == 2){
+        return $funcNameMsg;
+    }elseif ($indicator == 3){
+        return $constraintMsg;
+    }elseif ($indicator == 4){
+        return $testOut;
     }else{
-        if($indicator == 1){
-            return $colonMsg;
-        }elseif ($indicator == 2){
-            return $funcNameMsg;
-        }elseif ($indicator == 3){
-            return $constraintMsg;
-        }elseif ($indicator == 4){
-            return $testOut;
-        }else{
-            return "No indicator";
-        }
+        return "No indicator";
     }
 }
 
-function outputForm(){
+function outputForm($pnts, $funcName, $cons, $ans, $test){
 
+    $answer = $ans;
+    $functionName = $funcName;
+    $points = $pnts;
+    $constraint = $cons;
+    $testcases = $test;
+    $outputArray = [];
+
+    $minus = 0;
+
+    $colonMessage = outputGen($points, $functionName, $constraint, $answer, $testcases, 1);
+    $minus += preg_replace('/[^0-9]/', '', $colonMessage);
+    $functionMessage = outputGen($points, $functionName, $constraint, $answer, $testcases, 2);
+    $minus += preg_replace('/[^0-9]/', '', $functionMessage);
+    $constraintMessage = outputGen($points, $functionName, $constraint, $answer, $testcases, 3);
+    $minus += preg_replace('/[^0-9]/', '', $constraintMessage);
+    $testMsgArray = outputGen($points, $functionName, $constraint, $answer, $testcases, 4);
+
+    for($x = 0; $x < sizeof($testcases); $x++){
+        $pointsOnly = explode("minus", $testMsgArray[$x]);
+        $minus += preg_replace('/[^0-9]/', '', $pointsOnly[1]);
+    }
+
+
+    if(!empty($colonMessage)){
+        array_push($outputArray, $colonMessage);
+    }
+    if(!empty($functionMessage)){
+        array_push($outputArray, $functionMessage);
+    }
+    if(!empty($constraintMessage)){
+        array_push($outputArray, $constraintMessage);
+    }
+    if(!empty($testMsgArray)){
+        for($x = 0; $x < sizeof($testMsgArray); $x++){
+            array_push($outputArray, $testMsgArray[$x]);
+        }
+    }
+
+    array_push($outputArray, $minus);
+    return $outputArray;
 }
 
-$out = checkFuncName($functionName, $answer);
-$out2 = checkTestcase($testcases[0], $answer);
-$out3 = checkColon($answer);
-$out4 = checkConstraint($answer, $constraint);
-print($out2 . " Testcase");
-print("<br>");
-print($out . " Function Name");
-print("<br>");
-print($out3 . " Colon");
-print("<br>");
-print($out4 . " Constraint");
-print("<br>");
-print(outputGen($points, $functionName, $constraint, $answer, $testcases,1));
-print("<br>");
-print(outputGen($points, $functionName, $constraint, $answer, $testcases,2));
-print("<br>");
-print(outputGen($points, $functionName, $constraint, $answer, $testcases,3));
-print("<br>");
-$output2 = outputGen($points, $functionName, $constraint, $answer, $testcases, 4);
-print($output2[0]);
-print("<br>");
-print($output2[1]);
-print("<br>");
-print($output2[2]);
-print("<br>");
-print($output2[3]);
-print("<br>");
-print($output2[4]);
-print("<br>");
-print($output2[5]);
-print("<br>");
+$outArray = outputForm($points, $functionName, $constraint, $answer, $testcases);
+
+ if(sizeof($outArray)==1){
+     echo "0";
+ }else{
+     $payload = serialize($outArray);
+     echo $payload;
+ }
 ?>
