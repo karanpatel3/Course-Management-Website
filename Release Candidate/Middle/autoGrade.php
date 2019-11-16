@@ -1,8 +1,5 @@
 <?php
-
-//Dummy inputs below, inputs needed from Database - student answer, points, function name, constraint, testcases array
-
-$answer = "def operation(op, a, b):
+$answer = "def operation(op, a, b)
 	if op == '+':
 		return a+b
 	elif op == '-':
@@ -13,20 +10,10 @@ $answer = "def operation(op, a, b):
 		return a/b
 	else:
 		return \"error\"";
-
 $points = 20;
-
 $functionName = "operation";
-
 $constraint = "";
-
 $testcases = array("\"-\",5,3.2", "\"+\",5,3.8", "\"*\",5,3.15", "\"/\",4,2.2", "\"/\",4,2.2", "\"/\",4,2.2");
-
-function testCaseNum($test){
-    $testcases = $test;
-
-    return sizeof($testcases);
-}
 
 function checkColon($ans){
     $answer = $ans;
@@ -105,11 +92,19 @@ function checkTestcase($test, $ans){
         }
     }
 
-    $answer = $answer . "\n" . "print(" . $runline . ")";
-
     $file = fopen("/afs/cad.njit.edu/u/a/j/ajr74/public_html/pythonExec.py", "w") or die("Unable to open file.");
 
-    fwrite($file, $answer);
+    if(!checkColon($answer)){
+        $firstline = strstr($answer,"\n",true);
+        $firstline = rtrim($firstline);
+        $colon =':';
+        $newAnswer = str_replace($firstline, $firstline.$colon, $answer);
+        $newAnswer = $newAnswer . "\n" . "print(" . $runline . ")";
+        fwrite($file, $newAnswer);
+    }else{
+        $answer = $answer . "\n" . "print(" . $runline . ")";
+        fwrite($file, $answer);
+    }
 
     $pyOut = shell_exec('python /afs/cad.njit.edu/u/a/j/ajr74/public_html/pythonExec.py');
 
@@ -230,10 +225,8 @@ function outputForm($pnts, $funcName, $cons, $ans, $test){
 
 $outArray = outputForm($points, $functionName, $constraint, $answer, $testcases);
 
- if(sizeof($outArray)==1){
-     echo "0";
- }else{
-     $payload = serialize($outArray);
-     echo $payload;
- }
+for($x = 0; $x < sizeof($outArray); $x++){
+    print($outArray[$x]);
+    print("<br>");
+}
 ?>
