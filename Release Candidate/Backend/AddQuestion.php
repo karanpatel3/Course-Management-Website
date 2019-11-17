@@ -7,6 +7,8 @@ $Topic= $_POST['topic'];
 
 $Difficulty=$_POST['difficulty'];
 
+$FunctionName = $_POST['functionname'];
+
 $Constraint = $_POST['constraint'];
 
 $TestCase1=$_POST['test_case_1'];
@@ -34,7 +36,7 @@ $TestCase6=$_POST['test_case_6'];
 $TestCase6OP=$_POST['testcase6op'];
 
 
-$query = "INSERT INTO `kp486`.`Question_Bank` (`Question`, `Topic`, `Difficulty`, `Constraint`, `TestCase1`, `TestCase1OP`, `TestCase2`, `TestCase2OP`, `TestCase3`, `TestCase3OP`, `TestCase4`, `TestCase4OP`, `TestCase5`, `TestCase5OP`, `TestCase6`, `TestCase6OP`)VALUES ('$Question', '$Topic', '$Difficulty', '$Constraint', '$TestCase1', '$TestCase1OP', '$TestCase2', '$TestCase2OP', '$TestCase3', '$TestCase3OP', '$TestCase4', '$TestCase4OP', '$TestCase5', '$TestCase5OP', '$TestCase6', '$TestCase6OP')";
+$query = "INSERT INTO `kp486`.`Question_Bank` (`Question`, `FunctionName`, `Topic`, `Difficulty`, `Constraint`, `TestCase1`, `TestCase1OP`, `TestCase2`, `TestCase2OP`, `TestCase3`, `TestCase3OP`, `TestCase4`, `TestCase4OP`, `TestCase5`, `TestCase5OP`, `TestCase6`, `TestCase6OP`)VALUES ('$Question', '$FunctionName', '$Topic', '$Difficulty', '$Constraint', '$TestCase1', '$TestCase1OP', '$TestCase2', '$TestCase2OP', '$TestCase3', '$TestCase3OP', '$TestCase4', '$TestCase4OP', '$TestCase5', '$TestCase5OP', '$TestCase6', '$TestCase6OP')";
 
 $fail = fail;
 $success = success;
