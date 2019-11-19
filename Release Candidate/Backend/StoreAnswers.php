@@ -1,7 +1,5 @@
 <?php
 
-//this program is meant to take in the input of an array of QIDs and Points from the front end and send it to the back end table, the array that is being passed back is an associative array
-
 include('DBconnect.php'); //includes separate script to connect to database
 
 $input= file_get_contents('php://input'); //receives input from front end
@@ -42,7 +40,7 @@ $output = curl_exec($ch);
 // close curl resource to free up system resources
 curl_close($ch);
 
-echo var_dump($output);
+//echo var_dump($output);
 
 $json_decode1 = json_decode($output, true); //decodes the json passed into this file into an array
 
